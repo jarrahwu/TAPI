@@ -4,7 +4,7 @@ from web import conf
 
 def get_news_connection():
     c = conf.get_db()
-    con = torndb.Connection(host=c["host"], database=c["db_name"], password=c["pwd"], user=c["user"])
+    con = torndb.Connection(host=c["host"], database=c["db_name"], password=c["pwd"], user=c["name"])
     return con
 
 def get_news():
