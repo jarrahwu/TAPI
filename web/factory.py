@@ -43,4 +43,4 @@ class FUNY:
         links.append(gen_link_obj("next", "http://192.168.2.140:8888/funny"))
         funny["links"] = links
 
-        return news
+        return funny
