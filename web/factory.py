@@ -9,6 +9,14 @@ def gen_link_obj(rel, href):
     link['href'] = href
     return link
 
+
+def dump_pack(rows, *args):
+    pack = dict()
+    pack['items'] = rows
+    pack['links'] = args
+    return pack
+
+
 class APK:
     def get_items(self):
         items = []
@@ -33,15 +41,15 @@ class APK:
         apk['links'] = self.get_links()
         return apk
 
+
 class FUNY:
     def get_items(self):
-        news = service.get_news()
-
-        funny = dict()
-        funny["items"] = news
-
-        links = list()
-        links.append(gen_link_obj("next", "http://192.168.2.140:8888/funny"))
-        funny["links"] = links
-
+        rows = service.get_funny()
+        next_link = gen_link_obj("next", "http://192.168.2.140:8888/funny")
+        funny = dump_pack(rows, [next_link])
         return funny
+
+
+
+
+

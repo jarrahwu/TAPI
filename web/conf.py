@@ -1,6 +1,7 @@
 __author__ = 'jarrah'
 import constant
 
+
 def get_db():
     db = dict()
     db['name'] = constant.name
