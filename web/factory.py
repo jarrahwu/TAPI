@@ -46,7 +46,8 @@ class FUNY:
     def get_items(self):
         rows = service.get_funny()
         next_link = gen_link_obj("next", "http://192.168.2.140:8888/funny")
-        funny = dump_pack(rows, [next_link])
+        home_link = gen_link_obj("next", "http://192.168.2.140:8888/apks")
+        funny = dump_pack(rows, next_link, home_link)
         return funny
 
 
