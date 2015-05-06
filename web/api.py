@@ -17,8 +17,10 @@ class ItemsHandler(tornado.web.RequestHandler):
 
 class FunnyHandler(tornado.web.RequestHandler):
     def get(self, *args, **kwargs):
-        items = service.get_news()
-        self.write(items)
+        news = service.get_news()
+        funny = dict()
+        funny["items"] = news
+        self.write(funny)
 
 app = tornado.web.Application([(r"/", MainHandler), (r"/apks", ItemsHandler), (r"/funny", FunnyHandler)])
 
