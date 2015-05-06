@@ -7,6 +7,7 @@ def gen_link_obj(rel, href):
     link = dict()
     link['rel'] = rel
     link['href'] = href
+    return link
 
 class APK:
     def get_items(self):
