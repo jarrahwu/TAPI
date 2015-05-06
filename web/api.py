@@ -2,8 +2,7 @@ __author__ = 'jarrah'
 import tornado.web
 import tornado.ioloop
 from factory import APK
-from db import service
-
+from factory import FUNY
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self, *args, **kwargs):
@@ -17,10 +16,8 @@ class ItemsHandler(tornado.web.RequestHandler):
 
 class FunnyHandler(tornado.web.RequestHandler):
     def get(self, *args, **kwargs):
-        news = service.get_news()
-        funny = dict()
-        funny["items"] = news
-        self.write(funny)
+        funny = FUNY()
+        self.write(funny.get_items())
 
 app = tornado.web.Application([(r"/", MainHandler), (r"/apks", ItemsHandler), (r"/funny", FunnyHandler)])
 

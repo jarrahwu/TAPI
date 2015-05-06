@@ -1,5 +1,12 @@
+from db import service
+
 __author__ = 'jarrah'
 
+
+def gen_link_obj(rel, href):
+    link = dict()
+    link['rel'] = rel
+    link['href'] = href
 
 class APK:
     def get_items(self):
@@ -27,4 +34,13 @@ class APK:
 
 class FUNY:
     def get_items(self):
-        pass
+        news = service.get_news()
+
+        funny = dict()
+        funny["items"] = news
+
+        links = list()
+        links.append(gen_link_obj("next", "http://192.168.2.140:8888/funny"))
+        funny["links"] = links
+
+        return news
