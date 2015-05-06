@@ -24,3 +24,7 @@ class APK:
         apk['items'] = self.get_items()
         apk['links'] = self.get_links()
         return apk
+
+class FUNY:
+    def get_items(self):
+        pass

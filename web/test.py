@@ -1,5 +1,5 @@
 __author__ = 'jarrah'
-from factory import APK
+import conf
 
-apk = APK()
-apk.create()
+print(conf.get_db())
+
