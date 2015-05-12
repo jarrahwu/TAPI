@@ -2,6 +2,7 @@ from db import service
 
 __author__ = 'jarrah'
 
+from tornado.options import options
 
 def gen_link_obj(rel, href):
     link = dict()
@@ -10,6 +11,7 @@ def gen_link_obj(rel, href):
     return link
 
 
+# gen an array items pack
 def dump_pack(rows, *args):
     pack = dict()
     pack['items'] = rows
@@ -52,8 +54,8 @@ class Funny:
     def get_items(self, _from=0):
         rows = service.get_funny_limit(_from)
         next_index = _from + rows.__len__()
-        next_link = gen_link_obj("next", "http://192.168.160.128:8888/funny?index=%d" % next_index)
-        home_link = gen_link_obj("home", "http://192.168.2.140:8888/apks")
+        next_link = gen_link_obj("next", options.host_funny + "?index=%d" % next_index)
+        home_link = gen_link_obj("home", options.host)
         funny = dump_pack(rows, next_link, home_link)
         return funny
 
