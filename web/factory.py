@@ -18,6 +18,9 @@ def dump_pack(rows, *args):
 
 
 class APK:
+    def __init__(self):
+        pass
+
     def get_items(self):
         items = []
         for i in range(10):
@@ -42,11 +45,15 @@ class APK:
         return apk
 
 
-class FUNY:
-    def get_items(self):
-        rows = service.get_funny()
-        next_link = gen_link_obj("next", "http://192.168.2.140:8888/funny")
-        home_link = gen_link_obj("next", "http://192.168.2.140:8888/apks")
+class Funny:
+    def __init__(self):
+        pass
+
+    def get_items(self, _from=0):
+        rows = service.get_funny_limit(_from)
+        next_index = _from + rows.__len__()
+        next_link = gen_link_obj("next", "http://192.168.160.128:8888/funny?index=%d" % next_index)
+        home_link = gen_link_obj("home", "http://192.168.2.140:8888/apks")
         funny = dump_pack(rows, next_link, home_link)
         return funny
 

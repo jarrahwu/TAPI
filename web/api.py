@@ -3,7 +3,7 @@ import tornado.web
 import tornado.ioloop
 
 from factory import APK
-from factory import FUNY
+from factory import Funny
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -19,8 +19,10 @@ class ItemsHandler(tornado.web.RequestHandler):
 
 class FunnyHandler(tornado.web.RequestHandler):
     def get(self, *args, **kwargs):
-        funny = FUNY()
-        self.write(funny.get_items())
+        funny = Funny()
+        arg = self.get_argument(name="index", default=0)
+        _from = int(arg)
+        self.write(funny.get_items(_from=_from))
 
 
 app = tornado.web.Application([(r"/", MainHandler), (r"/apks", ItemsHandler), (r"/funny", FunnyHandler)])
