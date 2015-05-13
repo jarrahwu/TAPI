@@ -1,4 +1,4 @@
-from db import service
+from src.db import service
 
 __author__ = 'jarrah'
 

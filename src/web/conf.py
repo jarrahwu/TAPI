@@ -1,5 +1,5 @@
 __author__ = 'jarrah'
-import constant
+from src.web import constant
 
 
 def get_db():

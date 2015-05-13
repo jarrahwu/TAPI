@@ -3,7 +3,7 @@ import torndb
 
 funny_display_nums = 10
 
-from web import conf
+from src.web import conf
 
 
 def get_connection():

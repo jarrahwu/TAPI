@@ -1,13 +1,13 @@
 __author__ = 'jarrah'
 import tornado.web
 import tornado.ioloop
-
-from factory import APK
-from factory import Funny
-
 from tornado.options import define, options
 
-define(name="host", default="192.168.160.128:8888")
+from src.web.factory import APK
+from src.web.factory import Funny
+
+
+define(name="host", default="http://192.168.160.128:8888")
 define(name="host_funny", default=options.host+"/funny")
 
 class MainHandler(tornado.web.RequestHandler):
