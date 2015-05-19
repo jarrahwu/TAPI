@@ -31,7 +31,6 @@ for handler_py in handler_files:
         else:
             import_models = __import__(name='src.handler.' + handler_name, fromlist=['url_spec'])
             url_specs = import_models.url_spec()
-            print("url_specs :", url_specs)
             for spec in url_specs:
                 import_handlers.append(spec)
 
