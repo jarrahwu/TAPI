@@ -5,8 +5,17 @@ __author__ = 'jarrah'
 import os
 import re
 from app_setting import SETTINGS
+import sys
 
 my_path = (os.path.dirname(__file__))
+
+src_path = os.path.join(my_path, '..')
+
+if src_path not in sys.path:
+    print('exists src path')
+else:
+    print('src path does not exist, append')
+    sys.path.append(src_path)
 
 '''get handler path'''
 handler_path = os.path.join(my_path, '..', 'handler')
@@ -33,8 +42,6 @@ for handler_py in handler_files:
             url_specs = import_models.url_spec()
             for spec in url_specs:
                 import_handlers.append(spec)
-
-print("import handlers :", import_handlers)
 
 application = tornado.web.Application(handlers=import_handlers, **SETTINGS)
 
