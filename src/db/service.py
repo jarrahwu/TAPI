@@ -3,11 +3,11 @@ import torndb
 
 funny_display_nums = 10
 
-from src.web import conf
+from src.db import conf
 
 
 def get_connection():
-    c = conf.get_db()
+    c = conf.get_db_conf()
     con = torndb.Connection(host=c["host"], database=c["db_name"], password=c["pwd"], user=c["name"])
     return con
 
