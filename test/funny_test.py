@@ -15,7 +15,7 @@ class FunnyApiTest(BaseAsyncTest):
         response = self.fetch(self.path)
         self.assert_items_in(response)
 
-        bjo = self.get_json_body(response)
+        bjo = self.json_decode_body(response)
         self.assertIsNotNone(bjo)
 
         next_url = self.get_next_url(bjo)

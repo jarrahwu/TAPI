@@ -1,6 +1,6 @@
 from urlparse import urlparse
 import tornado
-from tornado.escape import json_decode
+from tornado.escape import json_decode, json_encode
 from src.tools.app_setting import SETTINGS
 __author__ = 'jarrah'
 import abc
@@ -41,6 +41,9 @@ class BaseAsyncTest(AsyncHTTPTestCase):
                 break
         return next_url
 
-    def get_json_body(self, response):
+    def json_decode_body(self, response):
         jo = json_decode(response.body)
         return jo
+
+    def json_encode_body(self, **kwargs):
+        return json_encode(kwargs)

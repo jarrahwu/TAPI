@@ -8,8 +8,11 @@ from app_setting import SETTINGS
 import sys
 
 my_path = (os.path.dirname(__file__))
+my_path = os.path.abspath(my_path)
 
 src_path = os.path.join(my_path, '..')
+
+
 
 if src_path not in sys.path:
     print('exists src path')
@@ -24,7 +27,6 @@ handler_files = os.listdir(handler_path)
 
 '''end with .py files '''
 pattern = re.compile(r'(?P<name>.+)\.py$')
-
 
 '''application run'''
 import_handlers = []
