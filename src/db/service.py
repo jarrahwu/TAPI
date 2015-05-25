@@ -1,7 +1,7 @@
 __author__ = 'jarrah'
 import torndb
 
-funny_display_nums = 10
+MAX_ROWS = 10
 
 from src.db import conf
 
@@ -13,7 +13,7 @@ def get_connection():
 
 
 def get_rows_limit(table_name, from_index):
-    to_index = from_index + funny_display_nums
+    to_index = from_index + MAX_ROWS
     print("from is %d to is %d" % (from_index, to_index))
     con = get_connection()
     start_sql = "select * from %s " % table_name
@@ -56,7 +56,3 @@ def insert_into(table_name, rows=[], values=[]):
 def get_funny_limit(_from):
     items = get_rows_limit(table_name="news_preview", from_index=_from)
     return items
-
-
-# if __name__ == '__main__':
-#     insert_into('user', ['phone', 'password'], ['18682212241', '123456'])

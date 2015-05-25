@@ -6,6 +6,7 @@ import os
 import re
 from app_setting import SETTINGS
 import sys
+from src.tools.path_util import img_uploads_path as img_path
 
 my_path = (os.path.dirname(__file__))
 my_path = os.path.abspath(my_path)
@@ -44,6 +45,9 @@ for handler_py in handler_files:
             url_specs = import_models.url_spec()
             for spec in url_specs:
                 import_handlers.append(spec)
+
+'''static handler'''
+import_handlers.append((r'/image/(.*)', tornado.web.StaticFileHandler, {'path': img_path}))
 
 application = tornado.web.Application(handlers=import_handlers, **SETTINGS)
 

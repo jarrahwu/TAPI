@@ -20,7 +20,6 @@ class FunnyHandler(BaseHandler):
     def post(self, *args, **kwargs):
         pass
 
-
     def get_items(self, _from=0):
         rows = service.get_funny_limit(_from)
         next_index = _from + rows.__len__()
