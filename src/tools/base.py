@@ -1,11 +1,11 @@
 from tornado.escape import json_decode
 from tornado.web import HTTPError
 
+import base64
 
 __author__ = 'jarrah'
 
 import tornado.web
-import abc
 
 KEY_RESPONSE_CODE = 'code'
 KEY_RESPONSE_MSG = 'msg'
@@ -16,12 +16,16 @@ CODE_ERROR = 1002
 MSG_OK = 'ok'
 MSG_ERROR = 'error'
 
+EXPIRES_DAYS = 15
+
 class BaseHandler(tornado.web.RequestHandler):
+
     def get_body_dict(self):
         jo = None
         try:
             jo = json_decode(self.request.body)
         except:
+            print('decode body error', self.request.body)
             raise HTTPError(status_code=400, reason='data format error')
         return jo
 
@@ -44,3 +48,22 @@ class BaseHandler(tornado.web.RequestHandler):
     def ok_pack(self):
         extra = dict()
         return self.make_response_pack(MSG_OK, CODE_SUCCESS, **extra)
+
+    def token_encode(self, uid, phone):
+        uid = str(uid)
+        phone = str(phone)
+        uid = base64.b64encode(uid, 'utf-8')
+        phone = base64.b64encode(phone, 'utf-8')
+        return '%s|%s' % (uid, phone)
+
+    def token_decode(self, token):
+        uid, phone = token.split('|')
+        uid = base64.b64decode(uid, 'utf-8')
+        phone = base64.b64decode(phone, 'utf-8')
+        return {'uid': uid, 'phone': phone}
+
+    def token_sign(self, token):
+        self.create_signed_value('token', token)
+
+    def set_token_cookie(self, token_signed):
+        self.set_cookie('token', token_signed, expires_days=EXPIRES_DAYS)

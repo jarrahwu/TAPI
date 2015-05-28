@@ -4,6 +4,7 @@ from src.tools.base import BaseHandler
 import os
 import uuid
 from src.tools import path_util as path
+from src.db import service
 
 IMG_DIR = path.img_uploads_path
 FORM_FILE = os.path.join(path.assets_path, 'upload.html')
@@ -31,7 +32,12 @@ class ImageHandler(BaseHandler):
         store_file = open(file_path, 'w')
         store_file.write(upload_arg['body'])
 
+        image_url = self.settings['HOST_IMAGE'] + file_name
+
         extra = dict()
-        extra['file_name'] = self.settings['HOST_IMAGE'] + file_name
+        extra['file_name'] = image_url
+
+        service.insert_into('news_preview', rows=['title', 'content', 'image_url'], values=['test', 'test', image_url])
+
         self.write(self.make_response_pack('upload success', 200, **extra))
 

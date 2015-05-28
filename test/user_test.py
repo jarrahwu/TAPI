@@ -3,16 +3,17 @@ from src.tools import base as handler_base
 from test.base import BaseAsyncTest
 from src.handler import user
 from src.db.service import get_connection
+import base64
 
 
 __author__ = 'jarrah'
 
 TEST_NICK = 'jtest_user'
-TEST_PASSWORD = '123456'
+TEST_PASSWORD = base64.b64encode('123456', 'utf-8')
 TEST_PHONE = '13316850712'
 
 PATH = '/user'
-PATH_SIGN_IN = '/user/signIn'
+PATH_LOGIN = '/user/login'
 
 
 def del_test_user():
@@ -36,7 +37,6 @@ class SignInTest(BaseAsyncTest):
             user.ROW_NICK, user.ROW_PHONE, user.ROW_PASSWORD)
         sql += ' values(%s,%s,%s)'
         con = get_connection()
-        print(sql)
         con.execute(sql, TEST_NICK, TEST_PHONE, TEST_PASSWORD)
         con.close()
 
@@ -44,8 +44,29 @@ class SignInTest(BaseAsyncTest):
         si[user.KEY_PHONE] = TEST_PHONE
         si[user.KEY_PASSWORD] = TEST_PASSWORD
         jo = self.json_encode_body(**si)
-        response = self.fetch(path=PATH_SIGN_IN, method='POST', body=jo)
-        print(response.body)
+        response = self.fetch(path=PATH_LOGIN, method='POST', body=jo)
+        self.assertEqual(response.code, 200)
+        self.assertIsNotNone(response.body)
+        print("login", response.body)
+
+    def test_login_user_not_exist(self):
+        del_test_user()
+        sql = 'insert into user(%s,%s,%s)' % (
+            user.ROW_NICK, user.ROW_PHONE, user.ROW_PASSWORD)
+        sql += ' values(%s,%s,%s)'
+        con = get_connection()
+        con.execute(sql, TEST_NICK, TEST_PHONE, TEST_PASSWORD)
+        con.close()
+
+        si = dict()
+        si[user.KEY_PHONE] = "123344213"
+        si[user.KEY_PASSWORD] = TEST_PASSWORD
+        jo = self.json_encode_body(**si)
+        response = self.fetch(path=PATH_LOGIN, method='POST', body=jo)
+        self.assertEqual(response.code, 200)
+        self.assertIsNotNone(response.body)
+        jo_rsp = self.json_decode_body(response)
+        self.assertEqual(jo_rsp[handler_base.KEY_RESPONSE_CODE], user.CODE_USER_NOT_EXIST)
 
 
 class UserTest(BaseAsyncTest):
@@ -62,8 +83,8 @@ class UserTest(BaseAsyncTest):
 
     def test_reg_args_error(self):
         jo = dict()
-        jo[user.KEY_PHONE] = '18682212241'
-        jo[user.KEY_PASSWORD] = '123456'
+        jo[user.KEY_PHONE] = TEST_PHONE
+        jo[user.KEY_PASSWORD] = TEST_PASSWORD
         body = json_encode(jo)
         response = self.fetch(path=PATH, method='POST', body=body)
         self.assertEqual(400, response.code)
