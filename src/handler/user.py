@@ -30,7 +30,6 @@ ROW_ID = '_id'
 
 
 class LoginHandler(BaseHandler):
-
     def post(self, *args, **kwargs):
         user = self.get_body_dict()
         '''check params'''
@@ -55,7 +54,11 @@ class LoginHandler(BaseHandler):
 
             if row_pwd == user[KEY_PASSWORD]:
                 token = self.token_encode(row_id, row_phone)
-                self.write(self.make_response_pack('login success', token=token))
+                row_user.__delitem__(ROW_ID)
+                row_user.__delitem__(ROW_PASSWORD)
+
+                self.set_secure_token(token)
+                self.write(self.make_response_pack('login success', user=row_user, token=token))
             else:
                 self.write(self.make_response_pack('password error', CODE_PASSWORD_ERROR))
         else:
@@ -64,7 +67,11 @@ class LoginHandler(BaseHandler):
 
 class UserHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        pass
+        token = self.get_request_token()
+        user = self.token_decode(token)
+        print("user get token", token)
+        print("create sign value", self.create_signed_value("token", token, version=None))
+        self.write(self.make_response_pack(token=self.token_encode(**user)))
 
     def post(self, *args, **kwargs):
         user = self.get_body_dict()

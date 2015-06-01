@@ -62,8 +62,18 @@ class BaseHandler(tornado.web.RequestHandler):
         phone = base64.b64decode(phone, 'utf-8')
         return {'uid': uid, 'phone': phone}
 
-    def token_sign(self, token):
-        self.create_signed_value('token', token)
+    def set_secure_token(self, value):
+        self.set_secure_cookie('token', value, expires_days=EXPIRES_DAYS)
 
-    def set_token_cookie(self, token_signed):
-        self.set_cookie('token', token_signed, expires_days=EXPIRES_DAYS)
+    def set_secure_token_with(self, uid, phone):
+        value = self.token_encode(uid, phone)
+        self.set_secure_cookie('token', value, expires_days=EXPIRES_DAYS)
+
+    def get_request_token(self, raise_error=True):
+        token = self.get_secure_cookie('token')
+        if token:
+            return token
+        elif raise_error:
+            raise tornado.web.HTTPError(403)
+        else:
+            return None

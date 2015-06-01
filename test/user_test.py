@@ -23,7 +23,7 @@ def del_test_user():
     con.close()
 
 
-class SignInTest(BaseAsyncTest):
+class LoginTest(BaseAsyncTest):
     def get_handlers(self):
         return user.url_spec()
 
