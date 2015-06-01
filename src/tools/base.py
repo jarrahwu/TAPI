@@ -1,5 +1,6 @@
 from tornado.escape import json_decode
 from tornado.web import HTTPError
+import src.tools.constant as CONSTANT
 
 import base64
 
@@ -7,14 +8,15 @@ __author__ = 'jarrah'
 
 import tornado.web
 
-KEY_RESPONSE_CODE = 'code'
-KEY_RESPONSE_MSG = 'msg'
-KEY_RESPONSE_EXTRA = 'extra'
-
-CODE_SUCCESS = 1000
-CODE_ERROR = 1002
-MSG_OK = 'ok'
-MSG_ERROR = 'error'
+# KEY_RESPONSE_CODE = 'code'
+# KEY_RESPONSE_MSG = 'msg'
+# KEY_RESPONSE_EXTRA = 'extra'
+#
+# CODE_SUCCESS = CONSTANT.CODE_SUCCESS
+# CODE_ERROR = CONSTANT.CODE_ERROR
+#
+# MSG_OK = 'ok'
+# MSG_ERROR = 'error'
 
 EXPIRES_DAYS = 15
 
@@ -29,11 +31,11 @@ class BaseHandler(tornado.web.RequestHandler):
             raise HTTPError(status_code=400, reason='data format error')
         return jo
 
-    def make_response_pack(self, msg=MSG_OK, code=CODE_SUCCESS, **kwargs):
+    def make_response_pack(self, msg=CONSTANT.MSG_OK, code=CONSTANT.CODE_SUCCESS, **kwargs):
         pack = dict()
-        pack[KEY_RESPONSE_MSG] = msg
-        pack[KEY_RESPONSE_CODE] = code
-        pack[KEY_RESPONSE_EXTRA] = kwargs
+        pack[CONSTANT.KEY_RESPONSE_MSG] = msg
+        pack[CONSTANT.KEY_RESPONSE_CODE] = code
+        pack[CONSTANT.KEY_RESPONSE_EXTRA] = kwargs
         return pack
 
     def get_illegal_arguments(self, *args):
@@ -47,7 +49,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def ok_pack(self):
         extra = dict()
-        return self.make_response_pack(MSG_OK, CODE_SUCCESS, **extra)
+        return self.make_response_pack(CONSTANT.MSG_OK, CONSTANT.CODE_SUCCESS, **extra)
 
     def token_encode(self, uid, phone):
         uid = str(uid)

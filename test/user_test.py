@@ -1,9 +1,9 @@
 from tornado.escape import json_encode
-from src.tools import base as handler_base
 from test.base import BaseAsyncTest
 from src.handler import user
 from src.db.service import get_connection
 import base64
+import src.tools.constant as CONSTANT
 
 
 __author__ = 'jarrah'
@@ -66,7 +66,7 @@ class LoginTest(BaseAsyncTest):
         self.assertEqual(response.code, 200)
         self.assertIsNotNone(response.body)
         jo_rsp = self.json_decode_body(response)
-        self.assertEqual(jo_rsp[handler_base.KEY_RESPONSE_CODE], user.CODE_USER_NOT_EXIST)
+        self.assertEqual(jo_rsp[CONSTANT.KEY_RESPONSE_CODE], CONSTANT.CODE_USER_NOT_EXIST)
 
 
 class UserTest(BaseAsyncTest):
@@ -99,7 +99,7 @@ class UserTest(BaseAsyncTest):
         self.assertIsNotNone(response)
         self.assertEqual(response.code, 200)
         bjo = self.json_decode_body(response)
-        self.assertEqual(user.CODE_SUCCESS, bjo[handler_base.KEY_RESPONSE_CODE])
+        self.assertEqual(CONSTANT.CODE_SUCCESS, bjo[CONSTANT.KEY_RESPONSE_CODE])
 
     def test_duplicated_reg(self):
         print("test duplicated reg")
@@ -107,13 +107,13 @@ class UserTest(BaseAsyncTest):
         self.assertIsNotNone(response)
         self.assertEqual(response.code, 200)
         bjo = self.json_decode_body(response)
-        self.assertEqual(user.CODE_SUCCESS, bjo[handler_base.KEY_RESPONSE_CODE])
+        self.assertEqual(CONSTANT.CODE_SUCCESS, bjo[CONSTANT.KEY_RESPONSE_CODE])
 
         response = self.fetch_insert()
         self.assertIsNotNone(response)
         self.assertEqual(response.code, 200)
         bjo = self.json_decode_body(response)
-        self.assertEqual(user.CODE_EXISTED_USER, bjo[handler_base.KEY_RESPONSE_CODE])
+        self.assertEqual(CONSTANT.CODE_EXISTED_USER, bjo[CONSTANT.KEY_RESPONSE_CODE])
 
     def tearDown(self):
         del_test_user()

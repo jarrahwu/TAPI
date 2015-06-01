@@ -4,12 +4,8 @@ from src.db.service import insert_into
 from src.db.service import get_connection
 
 from src.tools.base import BaseHandler
+import src.tools.constant as USER_DEFINE
 
-'''user pack code'''
-CODE_SUCCESS = 100
-CODE_EXISTED_USER = 102
-CODE_PASSWORD_ERROR = 104
-CODE_USER_NOT_EXIST = 106
 
 __author__ = 'jarrah'
 
@@ -60,9 +56,9 @@ class LoginHandler(BaseHandler):
                 self.set_secure_token(token)
                 self.write(self.make_response_pack('login success', user=row_user, token=token))
             else:
-                self.write(self.make_response_pack('password error', CODE_PASSWORD_ERROR))
+                self.write(self.make_response_pack('password error', USER_DEFINE.CODE_PASSWORD_ERROR))
         else:
-            self.write(self.make_response_pack('user does not exist', CODE_USER_NOT_EXIST))
+            self.write(self.make_response_pack('user does not exist', USER_DEFINE.CODE_USER_NOT_EXIST))
 
 
 class UserHandler(BaseHandler):
@@ -88,7 +84,7 @@ class UserHandler(BaseHandler):
             insert_id = insert_into(TABLE_NAME, [ROW_PHONE, ROW_PASSWORD, ROW_NICK],
                                     [kwargs[KEY_PHONE], kwargs[KEY_PASSWORD], kwargs[KEY_NICK]])
         except IntegrityError:
-            self.write(self.make_response_pack('existed user', CODE_EXISTED_USER))
+            self.write(self.make_response_pack('existed user', USER_DEFINE.CODE_EXISTED_USER))
 
         if insert_id:
-            self.write(self.make_response_pack('success', CODE_SUCCESS, userid=insert_id))
+            self.write(self.make_response_pack('success', USER_DEFINE.CODE_SUCCESS, userid=insert_id))
