@@ -29,7 +29,7 @@ class LoginHandler(BaseHandler):
     def post(self, *args, **kwargs):
         user = self.get_body_dict()
         '''check params'''
-        illegal_args = self.get_illegal_arguments(KEY_PHONE, KEY_PASSWORD)
+        illegal_args = self.get_missing_arguments(KEY_PHONE, KEY_PASSWORD)
         if illegal_args:
             raise MissingArgumentError(illegal_args)
         else:
@@ -63,7 +63,7 @@ class LoginHandler(BaseHandler):
 
 class UserHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        token = self.get_request_token()
+        token = self.get_token()
         user = self.token_decode(token)
         print("user get token", token)
         print("create sign value", self.create_signed_value("token", token, version=None))
@@ -72,7 +72,7 @@ class UserHandler(BaseHandler):
     def post(self, *args, **kwargs):
         user = self.get_body_dict()
         '''check params'''
-        illegal_args = self.get_illegal_arguments(KEY_NICK, KEY_PHONE, KEY_PASSWORD)
+        illegal_args = self.get_missing_arguments(KEY_NICK, KEY_PHONE, KEY_PASSWORD)
         if illegal_args:
             raise MissingArgumentError(illegal_args)
         else:

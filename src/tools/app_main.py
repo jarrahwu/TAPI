@@ -14,7 +14,6 @@ my_path = os.path.abspath(my_path)
 src_path = os.path.join(my_path, '..')
 
 
-
 if src_path not in sys.path:
     print('exists src path')
 else:

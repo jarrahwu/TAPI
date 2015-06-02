@@ -31,8 +31,8 @@ class LoginTest(BaseAsyncTest):
         del_test_user()
 
     def test_sign_in(self):
+        print("test_sign_in")
         del_test_user()
-        print('setup sign in')
         sql = 'insert into user(%s,%s,%s)' % (
             user.ROW_NICK, user.ROW_PHONE, user.ROW_PASSWORD)
         sql += ' values(%s,%s,%s)'
@@ -50,6 +50,7 @@ class LoginTest(BaseAsyncTest):
         print("login", response.body)
 
     def test_login_user_not_exist(self):
+        print("test_login_user_not_exist")
         del_test_user()
         sql = 'insert into user(%s,%s,%s)' % (
             user.ROW_NICK, user.ROW_PHONE, user.ROW_PASSWORD)
@@ -74,6 +75,7 @@ class UserTest(BaseAsyncTest):
         return user.url_spec()
 
     def fetch_insert(self):
+        print("fetch_insert")
         jo = dict()
         jo[user.KEY_PHONE] = TEST_PHONE
         jo[user.KEY_PASSWORD] = TEST_PASSWORD
@@ -82,6 +84,7 @@ class UserTest(BaseAsyncTest):
         return response
 
     def test_reg_args_error(self):
+        print("test_reg_args_error")
         jo = dict()
         jo[user.KEY_PHONE] = TEST_PHONE
         jo[user.KEY_PASSWORD] = TEST_PASSWORD
@@ -116,4 +119,5 @@ class UserTest(BaseAsyncTest):
         self.assertEqual(CONSTANT.CODE_EXISTED_USER, bjo[CONSTANT.KEY_RESPONSE_CODE])
 
     def tearDown(self):
+        print("tearDown")
         del_test_user()

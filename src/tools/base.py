@@ -20,6 +20,7 @@ import tornado.web
 
 EXPIRES_DAYS = 15
 
+
 class BaseHandler(tornado.web.RequestHandler):
 
     def get_body_dict(self):
@@ -38,14 +39,22 @@ class BaseHandler(tornado.web.RequestHandler):
         pack[CONSTANT.KEY_RESPONSE_EXTRA] = kwargs
         return pack
 
-    def get_illegal_arguments(self, *args):
+    def get_missing_arguments(self, *args):
         jo = self.get_body_dict()
         illegal_args = ''
         for arg in args:
             if arg not in jo:
                 illegal_args += arg
                 illegal_args += ','
+
         return (None, illegal_args)[len(illegal_args) > 0]
+
+    def raise_if_missing_args(self, *args):
+        missing = self.get_missing_arguments(*args)
+        if missing:
+            raise tornado.web.MissingArgumentError(missing)
+        else:
+            return False
 
     def ok_pack(self):
         extra = dict()
@@ -71,7 +80,7 @@ class BaseHandler(tornado.web.RequestHandler):
         value = self.token_encode(uid, phone)
         self.set_secure_cookie('token', value, expires_days=EXPIRES_DAYS)
 
-    def get_request_token(self, raise_error=True):
+    def get_token(self, raise_error=True):
         token = self.get_secure_cookie('token')
         if token:
             return token
@@ -79,3 +88,6 @@ class BaseHandler(tornado.web.RequestHandler):
             raise tornado.web.HTTPError(403)
         else:
             return None
+
+    def get_user_info(self):
+        return self.token_decode(self.get_token())
