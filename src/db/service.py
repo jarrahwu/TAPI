@@ -14,7 +14,7 @@ def get_connection():
 
 def get_rows_limit(table_name, from_index):
     to_index = from_index + MAX_ROWS
-    print("from is %d to is %d" % (from_index, to_index))
+    # print("from is %d to is %d" % (from_index, to_index))
     con = get_connection()
     start_sql = "select * from %s " % table_name
     query_sql = start_sql + "limit %(_from)s,%(_to)s"
@@ -49,7 +49,7 @@ def insert_into(table_name, rows=[], values=[]):
     con = get_connection()
     insert_id = con.execute(query_sql, *values)
     con.close()
-    print('inserted', insert_id)
+    # print('inserted', insert_id)
     return insert_id
 
 

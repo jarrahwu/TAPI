@@ -6,7 +6,6 @@ import os
 import re
 from app_setting import SETTINGS
 import sys
-from src.tools.path_util import img_uploads_path as img_path
 
 my_path = (os.path.dirname(__file__))
 my_path = os.path.abspath(my_path)
@@ -19,6 +18,9 @@ if src_path not in sys.path:
 else:
     print('src path does not exist, append')
     sys.path.append(src_path)
+
+
+from src.tools.path_util import img_uploads_path as img_path
 
 '''get handler path'''
 handler_path = os.path.join(my_path, '..', 'handler')
