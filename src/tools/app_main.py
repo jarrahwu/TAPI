@@ -10,15 +10,10 @@ import sys
 my_path = (os.path.dirname(__file__))
 my_path = os.path.abspath(my_path)
 
-src_path = os.path.join(my_path, '..')
+src_path = os.path.join(my_path, '..', '..')
+sys.path.append(src_path)
 
-
-if src_path not in sys.path:
-    print('exists src path')
-else:
-    print('src path does not exist, append')
-    sys.path.append(src_path)
-
+print(src_path)
 
 from src.tools.path_util import img_uploads_path as img_path
 
@@ -52,7 +47,7 @@ import_handlers.append((r'/image/(.*)', tornado.web.StaticFileHandler, {'path': 
 
 application = tornado.web.Application(handlers=import_handlers, **SETTINGS)
 
-PORT = 8888
+PORT = 6969
 if __name__ == '__main__':
     application.listen(PORT)
     tornado.ioloop.IOLoop.instance().start()

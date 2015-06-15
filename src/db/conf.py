@@ -1,10 +1,10 @@
 __author__ = 'jarrah'
 
 # data base setting
-USER_NAME = "root"
-PASSWORD = "zxcvbnm,./"
-HOST = "localhost"
-DB_NAME = "API"
+USER_NAME = "bluetest"
+PASSWORD = "123456"
+HOST = "10.10.81.163"
+DB_NAME = "BlueTest"
 
 
 def get_db_conf():

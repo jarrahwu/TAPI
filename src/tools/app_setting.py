@@ -1,7 +1,7 @@
 __author__ = 'jarrah'
 
 COOKIE_SECRET = "TAPI"
-SERVER_HOST = "http://192.168.2.122:8888"
+SERVER_HOST = "123.59.54.185:6969"
 
 SETTINGS = {
     'HOST': SERVER_HOST,
