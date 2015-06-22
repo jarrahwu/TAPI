@@ -7,4 +7,4 @@ def url_spec(**kwargs):
 
 class HomeHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        self.write('Welcome!\n')
+        self.write('Welcome To Blue - . -')

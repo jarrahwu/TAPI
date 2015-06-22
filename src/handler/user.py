@@ -26,6 +26,10 @@ ROW_ID = '_id'
 
 
 class LoginHandler(BaseHandler):
+
+    def get(self, *args, **kwargs):
+        self.write("login")
+
     def post(self, *args, **kwargs):
         user = self.get_body_dict()
         '''check params'''

@@ -53,6 +53,13 @@ def insert_into(table_name, rows=[], values=[]):
     return insert_id
 
 
+'''------------------------'''
+
 def get_funny_limit(_from):
     items = get_rows_limit(table_name="news_preview", from_index=_from)
     return items
+
+def get_moment_limit(_from):
+    items = get_rows_limit(table_name="moment", from_index=_from)
+    return items
+
