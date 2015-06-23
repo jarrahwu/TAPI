@@ -1,7 +1,7 @@
 __author__ = 'jarrah'
 import torndb
 
-MAX_ROWS = 10
+MAX_ROWS = 5
 
 from src.db import conf
 
@@ -14,7 +14,7 @@ def get_connection():
 
 def get_rows_limit(table_name, from_index):
     to_index = from_index + MAX_ROWS
-    # print("from is %d to is %d" % (from_index, to_index))
+    print("from is %d to is %d" % (from_index, to_index))
     con = get_connection()
     start_sql = "select * from %s " % table_name
     query_sql = start_sql + "limit %(_from)s,%(_to)s"
