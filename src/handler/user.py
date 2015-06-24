@@ -26,6 +26,10 @@ ROW_ID = '_id'
 
 
 class LoginHandler(BaseHandler):
+<<<<<<< HEAD
+=======
+
+>>>>>>> 78f14c8950bc4584eae3989584b141a012385210
     def get(self, *args, **kwargs):
         self.write("login")
 

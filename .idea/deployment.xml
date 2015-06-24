@@ -7,9 +7,12 @@
           <mappings>
             <mapping deploy="/Blue/TAPI" local="$PROJECT_DIR$" web="/" />
           </mappings>
+<<<<<<< HEAD
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/img_uploads" />
           </excludedPaths>
+=======
+>>>>>>> 78f14c8950bc4584eae3989584b141a012385210
         </serverdata>
       </paths>
     </serverData>
