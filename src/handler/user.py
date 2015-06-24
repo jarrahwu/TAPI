@@ -6,7 +6,6 @@ from src.db.service import get_connection
 from src.tools.base import BaseHandler
 import src.tools.constant as USER_DEFINE
 
-
 __author__ = 'jarrah'
 
 
@@ -17,6 +16,7 @@ def url_spec(**kwargs):
 KEY_PHONE = 'phone'
 KEY_PASSWORD = 'password'
 KEY_NICK = 'nick'
+KEY_MSG_CODE = 'msg_code'
 
 TABLE_NAME = 'user'
 ROW_PHONE = 'phone'
@@ -26,6 +26,9 @@ ROW_ID = '_id'
 
 
 class LoginHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        self.write("login")
+
     def post(self, *args, **kwargs):
         user = self.get_body_dict()
         '''check params'''
@@ -79,6 +82,11 @@ class UserHandler(BaseHandler):
             self.register(**user)
 
     def register(self, **kwargs):
+
+        # if '696969' != kwargs[KEY_MSG_CODE]:
+        #     self.write(self.make_response_pack('msg code error', USER_DEFINE.CODE_USER_MSG_CODE_ERROR))
+        #     return
+
         insert_id = 0
         try:
             insert_id = insert_into(TABLE_NAME, [ROW_PHONE, ROW_PASSWORD, ROW_NICK],

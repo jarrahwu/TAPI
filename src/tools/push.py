@@ -33,7 +33,7 @@ class Messenger:
         self.push.send()
 
 
-# msg = Messenger()
-# msg.send_notification('hello', alert='hi', alias=['abcdef'], key='k', value='v')
-# msg.send_notification(title='TITLE', alert='ALERT', key='k', value='v')
+msg = Messenger()
+msg.send_notification('hello', alert='hi', alias=['abcdef'], key='k', value='v')
+msg.send_notification(title='TITLE', alert='ALERT', key='k', value='v')
 
