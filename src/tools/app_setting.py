@@ -8,6 +8,7 @@ SETTINGS = {
     'HOST_FUNNY': SERVER_HOST + '/funny',
     'HOST_IMAGE': SERVER_HOST + '/image/',
     'HOST_MOMENT': SERVER_HOST + '/moment',
+    'HOST_CIRCLE': SERVER_HOST + '/circle',
     'cookie_secret': COOKIE_SECRET
 }
 

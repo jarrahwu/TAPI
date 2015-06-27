@@ -1,3 +1,4 @@
+import time
 from tornado.web import HTTPError, MissingArgumentError
 from torndb import IntegrityError
 from src.db.service import insert_into
@@ -23,13 +24,10 @@ ROW_PHONE = 'phone'
 ROW_PASSWORD = 'password'
 ROW_NICK = 'nick'
 ROW_ID = '_id'
+ROW_REG_TIME = "reg_time"
 
 
 class LoginHandler(BaseHandler):
-<<<<<<< HEAD
-=======
-
->>>>>>> 78f14c8950bc4584eae3989584b141a012385210
     def get(self, *args, **kwargs):
         self.write("login")
 
@@ -93,8 +91,9 @@ class UserHandler(BaseHandler):
 
         insert_id = 0
         try:
-            insert_id = insert_into(TABLE_NAME, [ROW_PHONE, ROW_PASSWORD, ROW_NICK],
-                                    [kwargs[KEY_PHONE], kwargs[KEY_PASSWORD], kwargs[KEY_NICK]])
+            reg_time = int(time.time())
+            insert_id = insert_into(TABLE_NAME, [ROW_PHONE, ROW_PASSWORD, ROW_NICK, ROW_REG_TIME],
+                                    [kwargs[KEY_PHONE], kwargs[KEY_PASSWORD], kwargs[KEY_NICK], reg_time])
         except IntegrityError:
             self.write(self.make_response_pack('existed user', USER_DEFINE.CODE_EXISTED_USER))
 

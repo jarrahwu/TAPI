@@ -1,6 +1,9 @@
+import uuid
 from tornado.escape import json_decode
 from tornado.web import HTTPError
+from src.tools import path_util
 import src.tools.constant as CONSTANT
+import os
 
 import base64
 
@@ -91,3 +94,17 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get_user_info(self):
         return self.token_decode(self.get_token())
+
+    '''save multipart image'''
+    def save_image(self, upload_param):
+        image_dir = path_util.img_uploads_path
+        if upload_param not in self.request.files:
+            return None
+        upload_file = self.request.files[upload_param][0]
+        upload_file_name = upload_file['filename']
+        upload_type = os.path.splitext(upload_file_name)[1]
+        file_name = str(uuid.uuid4()) + upload_type
+        file_path = os.path.join(image_dir, file_name)
+        store_file = open(file_path, 'w')
+        store_file.write(upload_file['body'])
+        return file_name
