@@ -45,6 +45,9 @@ class CirleFormHandler(BaseHandler):
         self.render(os.path.join(path.assets_path, 'circle.html'))
 
 
+'''circle get and post'''
+
+
 class CircleHandler(BaseHandler):
     def get(self, *args, **kwargs):
         arg = self.get_argument(name="index", default=0)
@@ -53,8 +56,16 @@ class CircleHandler(BaseHandler):
         rows = service.get_rows_limit(TABLE_CIRCLE, from_index=_from)
         next_index = _from + rows.__len__()
 
-        for row in rows:
-            service.filter_columns(row, ROW_ID, ROW_CATEGORY_ID)
+        # for row in rows:
+        #     service.filter_columns(row, ROW_ID, ROW_CATEGORY_ID)
+
+        for r in rows:
+            # remove hidden id
+            service.filter_columns(r, ROW_ID, ROW_CATEGORY_ID)
+            # build image path
+            image_name = r[ROW_IMAGE]
+            image_path = self.settings['HOST_IMAGE'] + image_name
+            r[ROW_IMAGE] = image_path
 
         next_link = gen_link_obj("next", self.settings['HOST_CIRCLE'] + "?index=%d" % next_index)
         home_link = gen_link_obj("home", self.settings['HOST'])
@@ -99,9 +110,4 @@ class FollowHandler(BaseHandler):
     '''do follow'''
 
     def post(self, *args, **kwargs):
-        pass
-
-    '''cancel follow'''
-
-    def delete(self, *args, **kwargs):
         pass

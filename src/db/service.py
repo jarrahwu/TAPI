@@ -110,6 +110,7 @@ def get_user_with(user_id):
 
 
 def filter_columns(row, *columns):
+    row = dict(row)
     for c in columns:
         print("columns del name", c)
         del row[c]
