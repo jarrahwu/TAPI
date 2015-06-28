@@ -62,6 +62,23 @@ def get_rows_limit_order(table_name, from_index, order_claus):
     return items
 
 
+def get_rows_limit_where(from_index, sql, params):
+    to_index = from_index + MAX_ROWS
+    print("from is %d to is %d" % (from_index, to_index))
+    con = get_connection()
+    query_sql = sql + " limit %s,%s"
+
+    sql_params = list()
+    for p in params:
+        sql_params.append(p)
+
+    sql_params.append(from_index)
+    sql_params.append(to_index)
+    items = con.query(query_sql, *sql_params)
+    con.close()
+    return items
+
+
 def insert_into(table_name, rows=[], values=[]):
     start_sql = "insert into " + table_name
     params_sql = (None, '(')[len(rows) > 0]

@@ -13,8 +13,7 @@ __author__ = 'jarrah'
 
 
 def url_spec(**kwargs):
-    return [(r'/user/login', LoginHandler, kwargs), (r'/user', UserHandler, kwargs),
-            (r'/user/circle', UserCircleHandler, kwargs)]
+    return [(r'/user/login', LoginHandler, kwargs), (r'/user', UserHandler, kwargs),]
 
 
 KEY_PHONE = 'phone'

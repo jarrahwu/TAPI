@@ -9,6 +9,7 @@ SETTINGS = {
     'HOST_IMAGE': SERVER_HOST + '/image/',
     'HOST_MOMENT': SERVER_HOST + '/moment',
     'HOST_CIRCLE': SERVER_HOST + '/circle',
+    'HOST_CIRCLE_INTEREST': SERVER_HOST + '/circle/interest',
     'cookie_secret': COOKIE_SECRET
 }
 
