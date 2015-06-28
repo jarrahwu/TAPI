@@ -1,6 +1,7 @@
 # coding: utf-8
 import os
 import uuid
+import time
 import tornado
 from src.tools.base import BaseHandler
 from src.tools.packer import gen_link_obj, dump_list_view_pack
@@ -15,20 +16,22 @@ KEY_USER = 'user'
 
 ROW_ID = '_id'
 ROW_USER_ID = 'user_id'
-ROW_COME_FROM = 'come_from'
 ROW_IMAGE = 'image'
 ROW_CONTENT = 'content'
 ROW_TITLE = 'title'
 ROW_CIRCLE_ID = "circle_id"
+ROW_TIMESTAMP = 'timestamp'
 
-KEY_COME_FROM = 'come_from'
 KEY_CONTENT = 'content'
 KEY_TITLE = 'title'
+
+''':key response circle json key'''
 KEY_CIRCLE = 'circle'
 
 __author__ = 'jarrah'
 
 UPLOAD_IMAGE_PARAMS = ['image0', 'image1', 'image2', 'image3', 'image4', 'image5', 'image6', 'image7', 'image8']
+
 
 def url_spec(**kwargs):
     return [
@@ -40,7 +43,6 @@ IMG_DIR = path.img_uploads_path
 
 
 class MomentHandler(BaseHandler):
-
     def get(self, *args, **kwargs):
 
         # print("moment get , cookie ", self.get_cookie("token", default="no cookie"))
@@ -59,12 +61,12 @@ class MomentHandler(BaseHandler):
             row = rows.__getitem__(i)
 
             user_id = row[ROW_USER_ID]
-            user_info = self.get_moment_user(user_id)
+            moment_user = self.get_moment_user(user_id)
 
             circle_id = row[ROW_CIRCLE_ID]
             circle_info = get_circle_info(circle_id)
 
-            row[KEY_USER] = user_info
+            row[KEY_USER] = moment_user
             if circle_info:
                 row[KEY_CIRCLE] = circle_info
             else:
@@ -81,8 +83,8 @@ class MomentHandler(BaseHandler):
             row[ROW_IMAGE] = url_images
 
             '''filter hide column'''
-            # _hide_columns = [ROW_CIRCLE_ID]
-            # service.filter_columns(row, *_hide_columns)
+            _hide_columns = [ROW_USER_ID, ROW_ID]
+            service.filter_columns(row, *_hide_columns)
 
         next_index = _from + rows.__len__()
         next_link = gen_link_obj("next", self.settings['HOST_MOMENT'] + "?index=%d" % next_index)
@@ -91,6 +93,7 @@ class MomentHandler(BaseHandler):
         return items
 
     '''获取关联的moment user'''
+
     def get_moment_user(self, user_id):
         return service.get_user_with(user_id)
 
@@ -121,9 +124,12 @@ class MomentHandler(BaseHandler):
 
         image_json_array = json_encode(images)
 
-        service.insert_into('moment', rows=[ROW_TITLE, ROW_CONTENT, ROW_IMAGE, ROW_COME_FROM, ROW_USER_ID, ROW_CIRCLE_ID],
-                            values=[moment_data[KEY_TITLE], moment_data[KEY_CONTENT], image_json_array,
-                                    moment_data[KEY_COME_FROM], user["uid"], circle_id])
+        ts = int(time.time())
+        service.insert_into('moment',
+                            rows=[ROW_TITLE, ROW_CONTENT, ROW_IMAGE, ROW_USER_ID, ROW_CIRCLE_ID,
+                                  ROW_TIMESTAMP],
+                            values=[moment_data[KEY_TITLE], moment_data[KEY_CONTENT], image_json_array, user["uid"],
+                                    circle_id, ts])
 
         extra = dict()
         extra['file_name'] = images
@@ -146,12 +152,10 @@ class MomentHandler(BaseHandler):
     def get_moment_data(self):
         title = self.get_argument(KEY_TITLE, None)
         content = self.get_argument(KEY_CONTENT, None)
-        come_from = self.get_argument(KEY_COME_FROM, None)
         moment_data = dict()
-        if title and content and come_from:
+        if title and content:
             moment_data[KEY_TITLE] = title
             moment_data[KEY_CONTENT] = content
-            moment_data[KEY_COME_FROM] = come_from
             return moment_data
         else:
             return None

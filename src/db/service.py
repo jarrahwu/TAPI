@@ -24,6 +24,33 @@ def get_rows_limit(table_name, from_index):
     return items
 
 
+def select_rows_limit(table_name, from_index, *columns):
+    to_index = from_index + MAX_ROWS
+    print("from is %d to is %d" % (from_index, to_index))
+    con = get_connection()
+
+    columns_sql = ''
+    for c in columns:
+        columns_sql += c
+        columns_sql += ','
+        # print(columns_sql)
+
+    if len(columns_sql):
+        columns_sql = columns_sql[:-1]
+        # print(columns_sql)
+    else:
+        columns_sql = '*'
+
+    # print(columns_sql)
+
+    start_sql = "select %s from %s " % (columns_sql, table_name)
+    query_sql = start_sql + "limit %(_from)s,%(_to)s"
+    print(query_sql)
+    items = con.query(query_sql, _from=from_index, _to=to_index)
+    con.close()
+    return items
+
+
 def get_rows_limit_order(table_name, from_index, order_claus):
     to_index = from_index + MAX_ROWS
     print("from is %d to is %d" % (from_index, to_index))
@@ -65,9 +92,14 @@ def insert_into(table_name, rows=[], values=[]):
     return insert_id
 
 
-def get_single_row_as_dict(table, value, key='_id'):
+def select_row_with_id(table, value, key='_id', columns=[]):
+    if len(columns):
+        columns_sql = encode_select_columns_clause(*columns)
+    else:
+        columns_sql = '*'
+
     con = get_connection()
-    sql = "select * FROM %s WHERE %s=" % (table, key)
+    sql = "select %s FROM %s WHERE %s=" % (columns_sql, table, key)
     sql += "%s"
     row = con.query(sql, value)
     con.close()
@@ -77,6 +109,38 @@ def get_single_row_as_dict(table, value, key='_id'):
         return row[0]
     else:
         return None
+
+
+
+def encode_select_columns_clause(*columns):
+    columns_sql = ''
+    for c in columns:
+        columns_sql += c
+        columns_sql += ','
+        # print(columns_sql)
+
+    if len(columns_sql):
+        columns_sql = columns_sql[:-1]
+        # print(columns_sql)
+    else:
+        columns_sql = '*'
+
+    return columns_sql
+
+
+
+
+def switch_table_row(table_name, rows, values, delete_where_clause, delete_where_params):
+    con = get_connection()
+    try:
+        insert_into(table_name, rows, values)
+    except torndb.IntegrityError as e:
+        print('favor exception', e)
+        con = get_connection()
+        # delete from sql
+        sql = 'delete from ' + table_name + ' where ' + delete_where_clause
+        con.execute(sql, *delete_where_params)
+    con.close()
 
 
 '''------------------------'''
@@ -99,9 +163,9 @@ def get_moment_limit(_from):
 
 
 def get_user_with(user_id):
-    user = get_single_row_as_dict('user', user_id)
+    user = select_row_with_id('user', user_id)
     if user:
-        _hide_columns = ['_id', 'external_app_id', 'reg_time']
+        _hide_columns = ['_id', 'external_app_id', 'reg_time', 'password', 'email', 'phone']
         filter_columns(user, *_hide_columns)
     return user
 
@@ -110,7 +174,6 @@ def get_user_with(user_id):
 
 
 def filter_columns(row, *columns):
-    row = dict(row)
     for c in columns:
         print("columns del name", c)
         del row[c]

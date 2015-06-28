@@ -34,9 +34,7 @@ def url_spec(**kwargs):
 
 
 def get_circle_info(circle_id):
-    row = service.get_single_row_as_dict(TABLE_CIRCLE, circle_id)
-    # if row:
-    #     service.filter_columns(ROW_ID, ROW_CATEGORY_ID)
+    row = service.select_row_with_id(TABLE_CIRCLE, circle_id, columns=[ROW_TITLE, ROW_SLOGAN])
     return row
 
 
@@ -53,7 +51,7 @@ class CircleHandler(BaseHandler):
         arg = self.get_argument(name="index", default=0)
         _from = int(arg)
 
-        rows = service.get_rows_limit(TABLE_CIRCLE, from_index=_from)
+        rows = service.select_rows_limit(TABLE_CIRCLE, _from, ROW_ID, ROW_IMAGE, ROW_SLOGAN, ROW_TITLE, ROW_HOT_COUNT)
         next_index = _from + rows.__len__()
 
         # for row in rows:
@@ -61,11 +59,12 @@ class CircleHandler(BaseHandler):
 
         for r in rows:
             # remove hidden id
-            service.filter_columns(r, ROW_ID, ROW_CATEGORY_ID)
             # build image path
             image_name = r[ROW_IMAGE]
             image_path = self.settings['HOST_IMAGE'] + image_name
             r[ROW_IMAGE] = image_path
+            follow_link = gen_link_obj("join", self.settings['HOST_CIRCLE'] + "?circle_id=%d" % r[ROW_ID])
+            r['link'] = follow_link
 
         next_link = gen_link_obj("next", self.settings['HOST_CIRCLE'] + "?index=%d" % next_index)
         home_link = gen_link_obj("home", self.settings['HOST'])

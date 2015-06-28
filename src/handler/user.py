@@ -3,7 +3,7 @@ from tornado.web import HTTPError, MissingArgumentError
 from torndb import IntegrityError
 from src.db.service import insert_into
 from src.db.service import get_connection
-from src.db.service import get_single_row_as_dict
+from src.db.service import select_row_with_id
 
 from src.tools.base import BaseHandler
 import src.tools.constant as USER_DEFINE
@@ -129,7 +129,7 @@ class UserCircleHandler(BaseHandler):
             raise MissingArgumentError(illegal_args)
         json_args = self.get_body_dict()
 
-        user_info = get_single_row_as_dict(TABLE_NAME, user['uid'])
+        user_info = select_row_with_id(TABLE_NAME, user['uid'])
 
         if user_info is None:
             raise HTTPError(status_code=404, log_message='user not found')
