@@ -1,31 +1,38 @@
+import time
 from tornado.web import HTTPError, MissingArgumentError
 from torndb import IntegrityError
+from src.db import service
 from src.db.service import insert_into
 from src.db.service import get_connection
 
 from src.tools.base import BaseHandler
 import src.tools.constant as USER_DEFINE
 
-
 __author__ = 'jarrah'
 
 
 def url_spec(**kwargs):
-    return [(r'/user/login', LoginHandler, kwargs), (r'/user', UserHandler, kwargs)]
+    return [(r'/user/login', LoginHandler, kwargs), (r'/user', UserHandler, kwargs),]
 
 
 KEY_PHONE = 'phone'
 KEY_PASSWORD = 'password'
 KEY_NICK = 'nick'
+KEY_MSG_CODE = 'msg_code'
 
 TABLE_NAME = 'user'
 ROW_PHONE = 'phone'
 ROW_PASSWORD = 'password'
 ROW_NICK = 'nick'
 ROW_ID = '_id'
+ROW_REG_TIME = "reg_time"
+ROW_FOLLOW = 'follow_circles'
 
 
 class LoginHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        self.write("login")
+
     def post(self, *args, **kwargs):
         user = self.get_body_dict()
         '''check params'''
@@ -63,11 +70,10 @@ class LoginHandler(BaseHandler):
 
 class UserHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        token = self.get_token()
-        user = self.token_decode(token)
-        print("user get token", token)
-        print("create sign value", self.create_signed_value("token", token, version=None))
-        self.write(self.make_response_pack(token=self.token_encode(**user)))
+        self.get_user_info()
+        user_id = self.get_arg('user_id')
+        user_obj = service.get_user_with(user_id)
+        self.write(user_obj)
 
     def post(self, *args, **kwargs):
         user = self.get_body_dict()
@@ -79,12 +85,23 @@ class UserHandler(BaseHandler):
             self.register(**user)
 
     def register(self, **kwargs):
+
+        # if '696969' != kwargs[KEY_MSG_CODE]:
+        #     self.write(self.make_response_pack('msg code error', USER_DEFINE.CODE_USER_MSG_CODE_ERROR))
+        #     return
+
         insert_id = 0
         try:
-            insert_id = insert_into(TABLE_NAME, [ROW_PHONE, ROW_PASSWORD, ROW_NICK],
-                                    [kwargs[KEY_PHONE], kwargs[KEY_PASSWORD], kwargs[KEY_NICK]])
+            reg_time = int(time.time())
+            insert_id = insert_into(TABLE_NAME, [ROW_PHONE, ROW_PASSWORD, ROW_NICK, ROW_REG_TIME],
+                                    [kwargs[KEY_PHONE], kwargs[KEY_PASSWORD], kwargs[KEY_NICK], reg_time])
         except IntegrityError:
             self.write(self.make_response_pack('existed user', USER_DEFINE.CODE_EXISTED_USER))
 
         if insert_id:
             self.write(self.make_response_pack('success', USER_DEFINE.CODE_SUCCESS, userid=insert_id))
+
+
+
+
+

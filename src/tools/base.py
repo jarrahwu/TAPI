@@ -1,8 +1,14 @@
+# coding: utf-8
+import uuid
 from tornado.escape import json_decode
 from tornado.web import HTTPError
+from src.tools import path_util
 import src.tools.constant as CONSTANT
+from tornado.web import MissingArgumentError
+import os
 
 import base64
+from src.tools.packer import gen_link_obj, dump_list_view_pack
 
 __author__ = 'jarrah'
 
@@ -22,7 +28,6 @@ EXPIRES_DAYS = 15
 
 
 class BaseHandler(tornado.web.RequestHandler):
-
     def get_body_dict(self):
         jo = None
         try:
@@ -91,3 +96,64 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get_user_info(self):
         return self.token_decode(self.get_token())
+
+    '''save multipart image'''
+
+    def save_image(self, upload_param):
+        image_dir = path_util.img_uploads_path
+        if upload_param not in self.request.files:
+            return None
+        upload_file = self.request.files[upload_param][0]
+        upload_file_name = upload_file['filename']
+        upload_type = os.path.splitext(upload_file_name)[1]
+        file_name = str(uuid.uuid4()) + upload_type
+        file_path = os.path.join(image_dir, file_name)
+        store_file = open(file_path, 'w')
+        store_file.write(upload_file['body'])
+        return file_name
+
+    '''获取索引 ?inde='''
+
+    def get_index(self):
+        return int(self.get_argument('index', 0))
+
+    '''获取参数, 没有的话抛出400'''
+
+    def get_arg(self, key):
+        arg = self.get_argument(key, default=None)
+        print("get_arg", arg)
+        if arg is None:
+            raise MissingArgumentError(key)
+        else:
+            return arg
+
+    '''获取post 过来的json 如果没有对应的字段, 就抛出异常'''
+
+    def get_post_json(self, *keys):
+        json = self.get_body_dict()
+        print(json)
+        if not json:
+            raise MissingArgumentError('not found json')
+
+        for key in keys:
+            if key not in json:
+                raise MissingArgumentError('json miss ' + key)
+        return json
+
+    '''输出listview items , 添加 next url, rows service查询出来的rows, index 索引, url handler对应的访问url'''
+
+    def write_items(self, rows, url, index, *other_links):
+        next_index = index + rows.__len__()
+
+        if "?" in url:
+            op = '&'
+        else:
+            op = '?'
+
+        next_link = gen_link_obj("next", url + "%sindex=%d" % (op, next_index))
+        links = list()
+        links.append(next_link)
+        for l in other_links:
+            links.append(l)
+        items = dump_list_view_pack(rows, *links)
+        self.write(items)
