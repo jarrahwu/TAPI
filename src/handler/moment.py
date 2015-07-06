@@ -20,6 +20,7 @@ ROW_IMAGE = 'image'
 ROW_CONTENT = 'content'
 ROW_TITLE = 'title'
 ROW_CIRCLE_ID = "circle_id"
+<<<<<<< HEAD
 ROW_TIMESTAMP = 'ts'
 
 KEY_DATA = 'data'
@@ -27,6 +28,12 @@ KEY_CONTENT = 'content'
 KEY_TITLE = 'title'
 KEY_COMMENT_LINK = 'link_comment'
 
+=======
+ROW_TIMESTAMP = 'timestamp'
+
+KEY_CONTENT = 'content'
+KEY_TITLE = 'title'
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
 
 ''':key response circle json key'''
 KEY_CIRCLE = 'circle'
@@ -48,6 +55,11 @@ IMG_DIR = path.img_uploads_path
 class MomentHandler(BaseHandler):
     def get(self, *args, **kwargs):
 
+<<<<<<< HEAD
+=======
+        # print("moment get , cookie ", self.get_cookie("token", default="no cookie"))
+
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
         arg = self.get_argument(name="index", default=0)
         _from = int(arg)
         moment_items = self.get_moment_items(_from=_from)
@@ -57,6 +69,7 @@ class MomentHandler(BaseHandler):
     def get_moment_items(self, _from=0):
         rows = service.get_moment_limit(_from)
 
+<<<<<<< HEAD
         '''build image path and extra info'''
         for i in range(rows.__len__()):
             row = rows.__getitem__(i)
@@ -70,12 +83,25 @@ class MomentHandler(BaseHandler):
             circle_info = get_circle_info(circle_id)
 
             '''append user dict'''
+=======
+        '''build image path'''
+        for i in range(rows.__len__()):
+            row = rows.__getitem__(i)
+
+            user_id = row[ROW_USER_ID]
+            moment_user = self.get_moment_user(user_id)
+
+            circle_id = row[ROW_CIRCLE_ID]
+            circle_info = get_circle_info(circle_id)
+
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
             row[KEY_USER] = moment_user
             if circle_info:
                 row[KEY_CIRCLE] = circle_info
             else:
                 row[KEY_CIRCLE] = UN_KNOW_CIRCLE
 
+<<<<<<< HEAD
             '''build image json array'''
             image = row[ROW_IMAGE]
             image_json_array = json_decode(image)
@@ -98,6 +124,22 @@ class MomentHandler(BaseHandler):
             service.filter_columns(row, *_hide_columns)
 
         '''add link'''
+=======
+            image = row[ROW_IMAGE]
+            image_json_array = json_decode(image)
+
+            url_images = list()
+            for image_name in image_json_array:
+                image_path = self.settings['HOST_IMAGE'] + image_name
+                url_images.append(image_path)
+
+            row[ROW_IMAGE] = url_images
+
+            '''filter hide column'''
+            _hide_columns = [ROW_USER_ID, ROW_ID]
+            service.filter_columns(row, *_hide_columns)
+
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
         next_index = _from + rows.__len__()
         next_link = gen_link_obj("next", self.settings['HOST_MOMENT'] + "?index=%d" % next_index)
         home_link = gen_link_obj("home", self.settings['HOST'])
@@ -109,7 +151,10 @@ class MomentHandler(BaseHandler):
     def get_moment_user(self, user_id):
         return service.get_user_with(user_id)
 
+<<<<<<< HEAD
     '''发布moment'''
+=======
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
     def post(self, *args, **kwargs):
         # if no circle id do not allow publish
         circle_id = self.get_argument('circle_id', default=None)
@@ -128,10 +173,19 @@ class MomentHandler(BaseHandler):
         images = list()
         for param in UPLOAD_IMAGE_PARAMS:
             file_name = self.save_image(param)
+<<<<<<< HEAD
             if file_name is None:
                 break
             image_id = service.insert_post_image(user['uid'], file_name)
             images.append(image_id)
+=======
+
+            if file_name is None:
+                break
+
+            # image_url = self.settings['HOST_IMAGE'] + file_name
+            images.append(file_name)
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
 
         image_json_array = json_encode(images)
 
@@ -142,6 +196,7 @@ class MomentHandler(BaseHandler):
                             values=[moment_data[KEY_TITLE], moment_data[KEY_CONTENT], image_json_array, user["uid"],
                                     circle_id, ts])
 
+<<<<<<< HEAD
         self.write(self.ok_pack())
 
     def get_moment_data(self):
@@ -151,5 +206,33 @@ class MomentHandler(BaseHandler):
         data = json_decode(data)
         if KEY_TITLE in data and KEY_CONTENT in data:
             return data
+=======
+        extra = dict()
+        extra['file_name'] = images
+        self.write(self.make_response_pack('upload success', 200, **extra))
+
+    def save_image(self, upload_param):
+
+        if upload_param not in self.request.files:
+            return None
+
+        upload_file = self.request.files[upload_param][0]
+        upload_file_name = upload_file['filename']
+        upload_type = os.path.splitext(upload_file_name)[1]
+        file_name = str(uuid.uuid4()) + upload_type
+        file_path = os.path.join(IMG_DIR, file_name)
+        store_file = open(file_path, 'w')
+        store_file.write(upload_file['body'])
+        return file_name
+
+    def get_moment_data(self):
+        title = self.get_argument(KEY_TITLE, None)
+        content = self.get_argument(KEY_CONTENT, None)
+        moment_data = dict()
+        if title and content:
+            moment_data[KEY_TITLE] = title
+            moment_data[KEY_CONTENT] = content
+            return moment_data
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
         else:
             return None

@@ -1,8 +1,12 @@
 # coding: utf-8
 from src.tools import app_setting
 __author__ = 'jarrah'
+<<<<<<< HEAD
 import time
 
+=======
+# coding: utf-8
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
 import torndb
 
 MAX_ROWS = 5
@@ -123,14 +127,23 @@ def select_row_with_id(table, value, key='_id', columns=[]):
     sql += "%s"
     row = con.query(sql, value)
     con.close()
+<<<<<<< HEAD
     # print('get_single_row_as_dict')
     # print(row)
+=======
+    print('get_single_row_as_dict')
+    print(row)
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
     if len(row):
         return row[0]
     else:
         return None
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
 def encode_select_columns_clause(*columns):
     columns_sql = ''
     for c in columns:
@@ -147,6 +160,11 @@ def encode_select_columns_clause(*columns):
     return columns_sql
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
 def switch_table_row(table_name, rows, values, delete_where_clause, delete_where_params):
     con = get_connection()
     try:
@@ -180,6 +198,7 @@ def get_moment_limit(_from):
 
 
 def get_user_with(user_id):
+<<<<<<< HEAD
     sql = 'select _id as user_link,nick,portrait FROM user WHERE _id=%s'
     con = get_connection()
     rows = con.query(sql, user_id)
@@ -194,6 +213,13 @@ def get_user_with(user_id):
         #     _hide_columns = ['_id', 'external_app_id', 'reg_time', 'password', 'email', 'phone']
         #     filter_columns(user, *_hide_columns)
         # return user
+=======
+    user = select_row_with_id('user', user_id)
+    if user:
+        _hide_columns = ['_id', 'external_app_id', 'reg_time', 'password', 'email', 'phone']
+        filter_columns(user, *_hide_columns)
+    return user
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
 
 
 '''过滤不需要显示的字段'''
@@ -201,6 +227,7 @@ def get_user_with(user_id):
 
 def filter_columns(row, *columns):
     for c in columns:
+<<<<<<< HEAD
         # print("columns del name", c)
         del row[c]
 
@@ -311,3 +338,7 @@ def select_moment_comment(moment_id, start=0):
         return rows
     else:
         return None
+=======
+        print("columns del name", c)
+        del row[c]
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b

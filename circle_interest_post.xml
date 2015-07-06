@@ -1,0 +1,42 @@
+<RestClientRequest>
+  <option name="biscuits">
+    <list>
+      <Biscuit>
+        <option name="date" value="1436688695000" />
+        <option name="domain" value="123.59.54.185" />
+        <option name="name" value="token" />
+        <option name="path" value="/" />
+        <option name="value" value="&quot;2|1:0|10:1435392695|5:token|28:TVE9PXxNVGcyT0RJeU1USXlOREU9|db06830dadb2adf5c8d81048eb4e4774e86c674d6878f90856390cf16893e92d&quot;" />
+      </Biscuit>
+    </list>
+  </option>
+  <option name="httpMethod" value="POST" />
+  <option name="urlBase" value="http://123.59.54.185:6969" />
+  <option name="urlPath" value="/circle/interest" />
+  <option name="headers">
+    <list>
+      <KeyValuePair>
+        <option name="key" value="Accept" />
+        <option name="value" value="*/*" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="Cache-Control" />
+        <option name="value" value="no-cache" />
+      </KeyValuePair>
+    </list>
+  </option>
+  <option name="parameters">
+    <list>
+      <KeyValuePair>
+        <option name="key" value="circle_id" />
+        <option name="value" value="22" />
+      </KeyValuePair>
+    </list>
+  </option>
+  <option name="parametersEnabled" value="true" />
+  <option name="haveTextToSend" value="false" />
+  <option name="haveFileToSend" value="true" />
+  <option name="isFileUpload" value="false" />
+  <option name="textToSend" value="" />
+  <option name="filesToSend" value="/home/jarrah/Documents/follow_circle.json" />
+</RestClientRequest>

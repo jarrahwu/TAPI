@@ -1,10 +1,16 @@
+<<<<<<< HEAD
 # coding: utf-8
+=======
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
 import uuid
 from tornado.escape import json_decode
 from tornado.web import HTTPError
 from src.tools import path_util
 import src.tools.constant as CONSTANT
+<<<<<<< HEAD
 from tornado.web import MissingArgumentError
+=======
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
 import os
 
 import base64
@@ -98,7 +104,10 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.token_decode(self.get_token())
 
     '''save multipart image'''
+<<<<<<< HEAD
 
+=======
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
     def save_image(self, upload_param):
         image_dir = path_util.img_uploads_path
         if upload_param not in self.request.files:
@@ -111,6 +120,7 @@ class BaseHandler(tornado.web.RequestHandler):
         store_file = open(file_path, 'w')
         store_file.write(upload_file['body'])
         return file_name
+<<<<<<< HEAD
 
     '''获取索引 ?inde='''
 
@@ -157,3 +167,5 @@ class BaseHandler(tornado.web.RequestHandler):
             links.append(l)
         items = dump_list_view_pack(rows, *links)
         self.write(items)
+=======
+>>>>>>> 14dca0509e3022adbf5f2e64b42384b4d3e2746b
