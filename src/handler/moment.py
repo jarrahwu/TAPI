@@ -51,6 +51,7 @@ class MomentHandler(BaseHandler):
         arg = self.get_argument(name="index", default=0)
         _from = int(arg)
         moment_items = self.get_moment_items(_from=_from)
+
         self.write(moment_items)
 
     def get_moment_items(self, _from=0):
